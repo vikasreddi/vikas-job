@@ -1,27 +1,98 @@
 {
-  "_note": "Search settings for the daily run. Fields marked TODO are waiting for Vikas's answers.",
-  "target_roles": ["TODO: e.g. Backend Engineer", "Senior Backend Engineer", "Software Engineer (Backend)"],
-  "primary_stack": ["TODO: e.g. Ruby on Rails", "Java / Spring Boot", "Node.js"],
-  "years_experience": "TODO",
+  "_note": "Search settings for the daily run. TODO fields are waiting for Vikas (see PENDING.md).",
+  "hunt_active": false,
+  "_hunt_active_note": "Stays false until Vikas says to start. While false: no job search, no listing, no applying.",
+  "target_roles": "TODO: confirm (e.g. Backend Engineer / Senior Backend Engineer / Software Engineer - Backend)",
+  "stack_from_resume": [
+    "Java",
+    "Spring Boot",
+    "Python",
+    "Django",
+    "Ruby on Rails",
+    "SQL",
+    "AWS",
+    "Kafka",
+    "Redis",
+    "PostgreSQL",
+    "MySQL",
+    "MongoDB"
+  ],
+  "lead_stack": "TODO: confirm order (resume headline leads with Java, Spring Boot, Python, SQL, AWS)",
+  "anchor_skill": "TODO: confirm (resume suggests Java / Spring Boot)",
+  "years_experience": "5+",
+  "location": "Bengaluru, India",
   "remote_scope": "TODO: india-remote | global-remote | both",
   "min_ctc_lpa": null,
-  "notice_period": "TODO",
+  "notice_period_days": 0,
   "company_type": "product",
-  "exclude_company_types": ["IT services", "consulting", "outsourcing", "staffing agency"],
+  "exclude_company_types": [
+    "IT services",
+    "consulting",
+    "outsourcing",
+    "staffing agency"
+  ],
   "exclude_companies": [],
   "daily_target": 15,
-  "apply_mode": "TODO: approve-first | auto",
+  "apply_mode": "TODO: approve-first | hybrid | auto",
+  "linkedin_daily_cap": 18,
+  "max_applications_per_company": 3,
+  "posted_within_days": 7,
+  "score_threshold": 70,
   "platforms": [
-    { "name": "LinkedIn", "url": "https://www.linkedin.com/jobs/", "needs_login": true },
-    { "name": "Naukri", "url": "https://www.naukri.com/", "needs_login": true },
-    { "name": "Work at a Startup (YC)", "url": "https://www.workatastartup.com/jobs", "needs_login": true },
-    { "name": "We Work Remotely", "url": "https://weworkremotely.com/", "needs_login": false },
-    { "name": "Cutshort", "url": "https://cutshort.io/jobs", "needs_login": true },
-    { "name": "Wellfound", "url": "https://wellfound.com/jobs", "needs_login": true },
-    { "name": "Instahyre", "url": "https://www.instahyre.com/", "needs_login": true },
-    { "name": "Hirist", "url": "https://www.hirist.tech/", "needs_login": true },
-    { "name": "RemoteOK", "url": "https://remoteok.com/", "needs_login": false },
-    { "name": "Remotive", "url": "https://remotive.com/", "needs_login": false },
-    { "name": "Himalayas", "url": "https://himalayas.app/jobs", "needs_login": false }
+    {
+      "name": "LinkedIn",
+      "url": "https://www.linkedin.com/jobs/",
+      "needs_login": true
+    },
+    {
+      "name": "Naukri",
+      "url": "https://www.naukri.com/",
+      "needs_login": true
+    },
+    {
+      "name": "Work at a Startup (YC)",
+      "url": "https://www.workatastartup.com/jobs",
+      "needs_login": true
+    },
+    {
+      "name": "We Work Remotely",
+      "url": "https://weworkremotely.com/",
+      "needs_login": false
+    },
+    {
+      "name": "Cutshort",
+      "url": "https://cutshort.io/jobs",
+      "needs_login": true
+    },
+    {
+      "name": "Wellfound",
+      "url": "https://wellfound.com/jobs",
+      "needs_login": true
+    },
+    {
+      "name": "Instahyre",
+      "url": "https://www.instahyre.com/",
+      "needs_login": true
+    },
+    {
+      "name": "Hirist",
+      "url": "https://www.hirist.tech/",
+      "needs_login": true
+    },
+    {
+      "name": "RemoteOK",
+      "url": "https://remoteok.com/",
+      "needs_login": false
+    },
+    {
+      "name": "Remotive",
+      "url": "https://remotive.com/",
+      "needs_login": false
+    },
+    {
+      "name": "Himalayas",
+      "url": "https://himalayas.app/jobs",
+      "needs_login": false
+    }
   ]
 }

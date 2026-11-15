@@ -42,6 +42,9 @@ This repo runs Vikas's job hunt: a daily search for remote jobs at product compa
 ```
 
 ## Rules
+- **Start switch:** while `config/search.json` → `hunt_active` is `false`, do not search for, list, score or apply to any job. Only setup and planning. Vikas flips it when he says to start.
+- **Job-portal profiles:** never edit Vikas's profile on LinkedIn, Naukri, Instahyre, Wellfound, Cutshort or any other portal without asking first. Show the proposed change and wait for a yes. (Naukri's daily resume re-upload counts as a profile change: it also needs his OK before it's switched on.)
+- Open items live in `PENDING.md`; tick them as data arrives and update the files they name.
 - Edit and delete by `id`, never by array index. Keep JSON valid (`python3 -m json.tool file.json`).
 - Remove duplicates: the same company + role posted on several sites is one job (keep the best link, note the other sources).
 - Product companies only, remote only (check the description; drop hybrid or onsite "remote" posts).

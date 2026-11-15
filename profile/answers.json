@@ -1,0 +1,32 @@
+{
+  "_note": "Answer bank for screening questions. null = not given yet: the field is left for Vikas, never guessed.",
+  "notice_period_days": 0,
+  "available_from": "immediately",
+  "current_location": "Bengaluru, India",
+  "total_experience_years": "5+",
+  "currently_employed": null,
+  "last_employer": "Learnyst Insight Pvt. Ltd. (Sep 2021 - Mar 2026)",
+  "highest_education": "B.Tech, Computer Science Engineering, Lovely Professional University (2017-2021), GPA 7.42/10",
+  "current_ctc_lpa": null,
+  "expected_ctc_lpa": null,
+  "minimum_ctc_lpa": null,
+  "work_authorization_india": null,
+  "needs_visa_sponsorship_abroad": null,
+  "willing_to_relocate": null,
+  "open_to_hybrid": null,
+  "years_by_technology": {
+    "Java": null,
+    "Spring Boot": null,
+    "Python": null,
+    "Django": null,
+    "Ruby on Rails": null,
+    "SQL": null,
+    "AWS": null,
+    "Kafka": null,
+    "Docker": null
+  },
+  "links": {
+    "linkedin": "https://linkedin.com/in/vikas-reddy-b7b21b196",
+    "github": "https://github.com/vikasreddi"
+  }
+}

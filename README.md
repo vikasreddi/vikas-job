@@ -2,7 +2,8 @@
 
 Vikas's job hunt: a daily search for remote jobs at product companies, a tailored resume for each job, application tracking, and a private dashboard.
 
-- `config/search.json`: what to search for (roles, stack, remote scope, platforms, exclusions)
+- `PENDING.md`: open tasks and standing rules (start here)
+- `config/search.json`: what to search for (roles, stack, remote scope, platforms, exclusions). `hunt_active: false` until the hunt starts
 - `profile/`: source material for resumes (about, experience, skills, projects, base resumes)
 - `site/`: the dashboard. `site/data/*.json` is the data; `site/files/resumes/` holds tailored resume PDFs
 - `CLAUDE.md`: data schemas and rules for the daily run
