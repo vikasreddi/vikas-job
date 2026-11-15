@@ -1,6 +1,6 @@
 # Pending tasks
 
-Status: **hunt on (15 Nov 2026): searching and listing allowed; applying only for jobs Vikas approves on the dashboard.**
+Status: **hunt OFF (15 Nov 2026): manual mode. Vikas asked for one manual job listing; nothing is applied and no automatic daily run until he says start.**
 Tick an item when its data arrives, and update the files it names.
 
 ## From Vikas: data
