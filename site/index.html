@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Vikas · Job Hunt</title>
+<style>
+  :root {
+    color-scheme: light;
+    --bg: #f4f3f0; --surface: #fcfcfb; --surface-2: #f0efeb; --border: #e3e1dc;
+    --text: #0b0b0b; --text-2: #52514e; --muted: #7a7974;
+    --accent: #2a78d6; --accent-ink: #ffffff;
+    --series-1: #2a78d6; --grid: #e8e6e1;
+    --good: #0b7a33; --good-bg: #e3f3e8; --bad: #b42318; --bad-bg: #fbe9e7;
+    --warn: #8a5a00; --warn-bg: #fdf1d8; --info-bg: #e5effb;
+    --shadow: 0 1px 2px rgba(0,0,0,.05), 0 1px 8px rgba(0,0,0,.04);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:where(:not([data-theme="light"])) {
+      color-scheme: dark;
+      --bg: #121211; --surface: #1a1a19; --surface-2: #232321; --border: #2e2e2b;
+      --text: #f0efec; --text-2: #c3c2b7; --muted: #8f8e86;
+      --accent: #3987e5; --series-1: #3987e5; --grid: #2b2b28;
+      --good: #4cc27a; --good-bg: #16301f; --bad: #f08a80; --bad-bg: #3a1d1a;
+      --warn: #e7b453; --warn-bg: #352a12; --info-bg: #1a2a3d;
+      --shadow: none;
+    }
+  }
+  :root[data-theme="dark"] {
+    color-scheme: dark;
+    --bg: #121211; --surface: #1a1a19; --surface-2: #232321; --border: #2e2e2b;
+    --text: #f0efec; --text-2: #c3c2b7; --muted: #8f8e86;
+    --accent: #3987e5; --series-1: #3987e5; --grid: #2b2b28;
+    --good: #4cc27a; --good-bg: #16301f; --bad: #f08a80; --bad-bg: #3a1d1a;
+    --warn: #e7b453; --warn-bg: #352a12; --info-bg: #1a2a3d;
+    --shadow: none;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text);
+    font: 14px/1.45 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+  a { color: var(--accent); text-decoration: none; } a:hover { text-decoration: underline; }
+  header { position: sticky; top: 0; z-index: 5; background: var(--surface); border-bottom: 1px solid var(--border); }
+  .bar { max-width: 1200px; margin: 0 auto; padding: 12px 20px; display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+  .brand { font-weight: 650; font-size: 16px; }
+  .brand small { color: var(--muted); font-weight: 400; margin-left: 6px; }
+  nav { display: flex; gap: 4px; flex-wrap: wrap; }
+  nav button { background: none; border: 0; padding: 7px 12px; border-radius: 8px; color: var(--text-2); font: inherit; cursor: pointer; }
+  nav button[aria-selected="true"] { background: var(--surface-2); color: var(--text); font-weight: 600; }
+  .spacer { flex: 1; }
+  .who { color: var(--muted); font-size: 12px; }
+  .iconbtn { background: none; border: 1px solid var(--border); color: var(--text-2); border-radius: 8px; padding: 5px 9px; cursor: pointer; font: inherit; }
+  main { max-width: 1200px; margin: 0 auto; padding: 20px; }
+  .banner { padding: 10px 14px; border-radius: 10px; margin-bottom: 16px; background: var(--warn-bg); color: var(--warn); }
+  .banner.hidden { display: none; }
+  .grid { display: grid; gap: 16px; }
+  .kpis { grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); }
+  .two { grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); }
+  .card { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 16px 18px; box-shadow: var(--shadow); }
+  .card h3 { margin: 0 0 2px; font-size: 14px; font-weight: 600; }
+  .card .sub { color: var(--muted); font-size: 12px; margin-bottom: 10px; }
+  .kpi .label { color: var(--text-2); font-size: 12px; }
+  .kpi .value { font-size: 28px; font-weight: 650; letter-spacing: -0.02em; margin-top: 2px; font-variant-numeric: tabular-nums; }
+  .kpi .note { color: var(--muted); font-size: 12px; }
+  section { display: none; } section.active { display: block; }
+  section > .grid + .grid, section > .card + .card, section > .grid + .card { margin-top: 16px; }
+  .toolbar { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; margin-bottom: 12px; }
+  .toolbar input, .toolbar select, form input, form select, form textarea, td select {
+    background: var(--surface); color: var(--text); border: 1px solid var(--border); border-radius: 8px; padding: 6px 9px; font: inherit; }
+  .toolbar input[type=search] { min-width: 220px; }
+  .btn { background: var(--accent); color: var(--accent-ink); border: 0; border-radius: 8px; padding: 7px 12px; font: inherit; font-weight: 600; cursor: pointer; }
+  .btn.ghost { background: var(--surface-2); color: var(--text); font-weight: 500; }
+  .btn.small { padding: 4px 9px; font-size: 12px; }
+  .btn:disabled { opacity: .5; cursor: default; }
+  .count { color: var(--muted); font-size: 12px; margin-left: auto; }
+  .tablewrap { overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  th { text-align: left; color: var(--text-2); font-weight: 600; font-size: 12px; padding: 8px 10px; border-bottom: 1px solid var(--border); white-space: nowrap; }
+  td { padding: 9px 10px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  tr:last-child td { border-bottom: 0; }
+  td .muted, .muted { color: var(--muted); font-size: 12px; }
+  .num { text-align: right; font-variant-numeric: tabular-nums; }
+  .badge { display: inline-flex; align-items: center; gap: 4px; padding: 2px 8px; border-radius: 999px; font-size: 12px; background: var(--surface-2); color: var(--text-2); white-space: nowrap; }
+  .badge.good { background: var(--good-bg); color: var(--good); }
+  .badge.bad { background: var(--bad-bg); color: var(--bad); }
+  .badge.warn { background: var(--warn-bg); color: var(--warn); }
+  .badge.info { background: var(--info-bg); color: var(--accent); }
+  .score { font-variant-numeric: tabular-nums; font-weight: 600; }
+  .empty { padding: 28px; text-align: center; color: var(--muted); }
+  .actions { display: flex; gap: 6px; flex-wrap: wrap; }
+  details.add { margin-bottom: 12px; }
+  details.add summary { cursor: pointer; color: var(--accent); font-weight: 600; }
+  form.inline { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 8px; margin-top: 10px; }
+  form.inline label { display: flex; flex-direction: column; gap: 3px; font-size: 12px; color: var(--text-2); }
+  .chart svg { display: block; width: 100%; height: auto; overflow: visible; }
+  .chart text { fill: var(--text-2); font-size: 11px; }
+  .chart .gridline { stroke: var(--grid); stroke-width: 1; }
+  .chart .mark { fill: var(--series-1); }
+  .chart .hit { fill: transparent; cursor: default; }
+  .chart .hit:hover + .mark, .chart g:hover .mark { opacity: .8; }
+  #tip { position: fixed; pointer-events: none; z-index: 20; background: var(--text); color: var(--surface); padding: 6px 9px; border-radius: 8px; font-size: 12px; opacity: 0; transition: opacity .1s; white-space: nowrap; }
+  #toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: var(--text); color: var(--surface); padding: 10px 16px; border-radius: 10px; opacity: 0; transition: opacity .2s; z-index: 30; max-width: 90vw; }
+  .feed { list-style: none; margin: 0; padding: 0; }
+  .feed li { padding: 10px 0; border-bottom: 1px solid var(--border); display: flex; gap: 10px; }
+  .feed li:last-child { border-bottom: 0; }
+  .feed .date { color: var(--muted); font-size: 12px; min-width: 78px; font-variant-numeric: tabular-nums; }
+  .linkbtn { background: none; border: 0; color: var(--accent); cursor: pointer; padding: 0; font: inherit; font-size: 12px; }
+  .history { margin: 6px 0 0; padding-left: 16px; color: var(--text-2); font-size: 12px; }
+  .viewtoggle { margin-left: auto; }
+  @media (max-width: 640px) { .bar { padding: 10px 14px; } main { padding: 14px; } .toolbar input[type=search] { min-width: 0; flex: 1; } }
+</style>
+</head>
+<body>
+<header>
+  <div class="bar">
+    <div class="brand">Job Hunt<small>Vikas</small></div>
+    <nav role="tablist" id="tabs">
+      <button role="tab" data-tab="overview">Overview</button>
+      <button role="tab" data-tab="jobs">Jobs</button>
+      <button role="tab" data-tab="applications">Applications</button>
+      <button role="tab" data-tab="responses">Responses</button>
+      <button role="tab" data-tab="log">Daily log</button>
+    </nav>
+    <div class="spacer"></div>
+    <span class="who" id="who"></span>
+    <button class="iconbtn" id="refresh" title="Reload data">Refresh</button>
+    <button class="iconbtn" id="theme" title="Toggle light/dark">Theme</button>
+  </div>
+</header>
+
+<main>
+  <div class="banner hidden" id="banner"></div>
+
+  <!-- OVERVIEW -->
+  <section id="overview">
+    <div class="grid kpis" id="kpis"></div>
+    <div class="grid two">
+      <div class="card"><h3>Applications per day</h3><div class="sub">Last 30 days</div><div class="chart" id="chart-daily"></div></div>
+      <div class="card"><h3>Pipeline</h3><div class="sub">Applications by current status</div><div class="chart" id="chart-status"></div></div>
+    </div>
+    <div class="grid two">
+      <div class="card"><h3>Response rate by platform</h3><div class="sub">Share of applications that got any reply (count in brackets)</div><div class="chart" id="chart-source"></div></div>
+      <div class="card"><h3>Latest activity</h3><div class="sub">Most recent replies and daily runs</div><ul class="feed" id="feed"></ul></div>
+    </div>
+    <div class="card"><h3>Follow-ups due</h3><div class="sub">Applications whose follow-up date has arrived and that are still open</div><div class="tablewrap" id="followups"></div></div>
+  </section>
+
+  <!-- JOBS -->
+  <section id="jobs">
+    <div class="card">
+      <div class="toolbar">
+        <input type="search" id="jobs-q" placeholder="Search company, role, stack…">
+        <select id="jobs-status"><option value="">All statuses</option><option value="new" selected>New</option><option value="approved">Approved</option><option value="skipped">Skipped</option><option value="applied">Applied</option></select>
+        <select id="jobs-source"><option value="">All platforms</option></select>
+        <select id="jobs-date"><option value="">Any date</option><option value="today">Found today</option><option value="7">Last 7 days</option></select>
+        <button class="btn small" id="approve-all" title="Approve every job in the current list that is still New">Approve all shown</button>
+        <span class="count" id="jobs-count"></span>
+      </div>
+      <div class="tablewrap" id="jobs-table"></div>
+    </div>
+  </section>
+
+  <!-- APPLICATIONS -->
+  <section id="applications">
+    <div class="card">
+      <details class="add writeonly"><summary>+ Add an application you made yourself</summary>
+        <form class="inline" id="add-app">
+          <label>Company<input name="company" required></label>
+          <label>Role<input name="role" required></label>
+          <label>Job link<input name="url" type="url"></label>
+          <label>Platform<input name="source" placeholder="LinkedIn, Naukri, company site…"></label>
+          <label>Applied on<input name="applied_on" type="date" required></label>
+          <label>Notes<input name="notes"></label>
+          <label>&nbsp;<button class="btn" type="submit">Add</button></label>
+        </form>
+      </details>
+      <div class="toolbar">
+        <input type="search" id="apps-q" placeholder="Search company or role…">
+        <select id="apps-status"><option value="">All statuses</option></select>
+        <select id="apps-source"><option value="">All platforms</option></select>
+        <span class="count" id="apps-count"></span>
+      </div>
+      <div class="tablewrap" id="apps-table"></div>
+    </div>
+  </section>
+
+  <!-- RESPONSES -->
+  <section id="responses">
+    <div class="card">
+      <details class="add writeonly"><summary>+ Log a response</summary>
+        <form class="inline" id="add-resp">
+          <label>Application<select name="application_id" id="resp-app" required></select></label>
+          <label>Date<input name="date" type="date" required></label>
+          <label>Channel<select name="channel"><option>email</option><option>linkedin</option><option>naukri</option><option>phone</option><option>other</option></select></label>
+          <label>Type<select name="type"><option>reply</option><option>assessment</option><option>interview</option><option>rejection</option><option>offer</option><option>other</option></select></label>
+          <label>From<input name="from"></label>
+          <label>Summary<input name="summary" required></label>
+          <label>&nbsp;<button class="btn" type="submit">Add</button></label>
+        </form>
+      </details>
+      <div class="tablewrap" id="resp-table"></div>
+    </div>
+  </section>
+
+  <!-- DAILY LOG -->
+  <section id="log">
+    <div class="card"><div class="tablewrap" id="log-table"></div></div>
+  </section>
+</main>
+
+<div id="tip" role="tooltip"></div>
+<div id="toast" role="status" aria-live="polite"></div>
+
+<script>
+const KEYS = ["jobs", "applications", "responses", "daily_log"];
+const state = { data: {}, sha: {}, canWrite: false, user: "" };
+
+const APP_STATUSES = [
+  ["applied", "Applied", ""], ["viewed", "Viewed", "info"], ["in_touch", "In touch", "info"],
+  ["assessment", "Assessment", "warn"], ["interview", "Interview", "warn"], ["offer", "Offer", "good"],
+  ["rejected", "Rejected", "bad"], ["no_response", "No response", ""], ["withdrawn", "Withdrawn", ""],
+];
+const STATUS_LABEL = Object.fromEntries(APP_STATUSES.map(s => [s[0], s[1]]));
+const STATUS_TONE = Object.fromEntries(APP_STATUSES.map(s => [s[0], s[2]]));
+const CLOSED = new Set(["offer", "rejected", "no_response", "withdrawn"]);
+const JOB_TONE = { new: "info", approved: "good", skipped: "", applied: "" };
+const RESP_TONE = { interview: "warn", assessment: "warn", offer: "good", rejection: "bad", reply: "info", other: "" };
+const ICON = { good: "✓ ", bad: "✕ ", warn: "● ", info: "", "": "" };
+
+// ---------- helpers ----------
+const $ = (s, el = document) => el.querySelector(s);
+const esc = (v) => String(v ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+const today = () => new Date(Date.now() - new Date().getTimezoneOffset() * 60000).toISOString().slice(0, 10);
+const daysAgo = (n) => { const d = new Date(); d.setDate(d.getDate() - n); return new Date(d - d.getTimezoneOffset() * 60000).toISOString().slice(0, 10); };
+const fmtDate = (s) => { if (!s) return ""; const d = new Date(s + "T00:00:00"); return isNaN(d) ? esc(s) : d.toLocaleDateString(undefined, { day: "numeric", month: "short" }); };
+const safeUrl = (u) => /^https?:\/\//i.test(u || "") ? u : (/^files\//.test(u || "") ? u : "");
+const badge = (label, tone) => `<span class="badge ${tone || ""}">${ICON[tone || ""] || ""}${esc(label)}</span>`;
+const uid = (prefix, ...parts) => prefix + "-" + parts.join("-").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "").slice(0, 60) + "-" + Math.random().toString(36).slice(2, 6);
+function pref(k, v) { try { if (v === undefined) return localStorage.getItem("vj." + k); localStorage.setItem("vj." + k, v); } catch (e) { return null; } }
+
+function toast(msg) { const t = $("#toast"); t.textContent = msg; t.style.opacity = 1; clearTimeout(toast.t); toast.t = setTimeout(() => t.style.opacity = 0, 3500); }
+function showBanner(msg) { const b = $("#banner"); b.textContent = msg; b.classList.remove("hidden"); }
+
+// ---------- data layer (from docs-hosting.md) ----------
+async function load() {
+  try {
+    const r = await fetch("/api/data", { headers: { accept: "application/json" } });
+    if (!r.ok) throw new Error("api " + r.status);
+    const j = await r.json();
+    for (const k of KEYS) { state.data[k] = j[k]?.rows || []; state.sha[k] = j[k]?.sha || null; }
+    state.user = j.user || ""; state.canWrite = true;
+    $("#banner").classList.add("hidden");
+  } catch (e) {
+    const v = Date.now();
+    for (const k of KEYS) state.data[k] = await fetch(`data/${k}.json?v=${v}`).then(r => r.ok ? r.json() : []).catch(() => []);
+    state.canWrite = false;
+    showBanner("Read-only copy: saving is unavailable. Open /api/health to see why.");
+  }
+  render();
+}
+
+async function save(key, message) {
+  if (!state.canWrite) { toast("Read-only mode: can't save."); return false; }
+  try {
+    const r = await fetch(`/api/data/${key}`, {
+      method: "PUT", headers: { "content-type": "application/json" },
+      body: JSON.stringify({ rows: state.data[key], sha: state.sha[key], message }),
+    });
+    if (r.status === 409) {
+      const { latest } = await r.json();
+      state.data[key] = latest.rows; state.sha[key] = latest.sha; render();
+      toast("This list changed elsewhere. Reloaded the latest copy. Please redo your last change.");
+      return false;
+    }
+    if (!r.ok) { toast("Save failed (" + r.status + ")"); return false; }
+    state.sha[key] = (await r.json()).sha;
+    toast("Saved");
+    return true;
+  } catch (e) { toast("Save failed: " + e.message); return false; }
+}
+
+// ---------- charts (single-series bars; hover tooltips via data-tip) ----------
+function roundTopPath(x, y, w, h, r) {
+  r = Math.min(r, w / 2, h); if (h <= 0) return "";
+  return `M${x},${y + h}V${y + r}Q${x},${y} ${x + r},${y}H${x + w - r}Q${x + w},${y} ${x + w},${y + r}V${y + h}Z`;
+}
+function roundRightPath(x, y, w, h, r) {
+  r = Math.min(r, h / 2, w); if (w <= 0) return "";
+  return `M${x},${y}H${x + w - r}Q${x + w},${y} ${x + w},${y + r}V${y + h - r}Q${x + w},${y + h} ${x + w - r},${y + h}H${x}Z`;
+}
+function niceMax(v) { if (v <= 4) return Math.max(v, 1) <= 2 ? Math.max(2, v) : 4; const p = Math.pow(10, Math.floor(Math.log10(v))); const m = v / p; return (m <= 2 ? 2 : m <= 5 ? 5 : 10) * p; }
+
+function dailyChart(el, apps) {
+  const days = []; for (let i = 29; i >= 0; i--) days.push(daysAgo(i));
+  const counts = Object.fromEntries(days.map(d => [d, 0]));
+  apps.forEach(a => { if (a.applied_on in counts) counts[a.applied_on]++; });
+  const vals = days.map(d => counts[d]);
+  if (!vals.some(Boolean)) { el.innerHTML = `<div class="empty">No applications in the last 30 days yet.</div>`; return; }
+  const W = 560, H = 190, L = 28, B = 22, T = 8, max = niceMax(Math.max(...vals));
+  const pw = (W - L) / days.length, bw = Math.max(4, pw - 4), y = v => T + (H - T - B) * (1 - v / max);
+  let s = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Applications per day, last 30 days">`;
+  const ticks = [0, max / 2, max];
+  ticks.forEach(t => { s += `<line class="gridline" x1="${L}" x2="${W}" y1="${y(t)}" y2="${y(t)}"/><text x="${L - 6}" y="${y(t) + 4}" text-anchor="end">${t}</text>`; });
+  days.forEach((d, i) => {
+    const x = L + i * pw + (pw - bw) / 2, v = vals[i], tip = `${fmtDate(d)}: ${v} application${v === 1 ? "" : "s"}`;
+    s += `<g data-tip="${esc(tip)}"><rect class="hit" x="${L + i * pw}" y="${T}" width="${pw}" height="${H - T - B}"/>`;
+    if (v) s += `<path class="mark" d="${roundTopPath(x, y(v), bw, y(0) - y(v), 4)}"/>`;
+    s += `</g>`;
+    if ((i % 7 === 0 && i < days.length - 4) || i === days.length - 1) s += `<text x="${L + i * pw + pw / 2}" y="${H - 6}" text-anchor="middle">${fmtDate(d)}</text>`;
+  });
+  el.innerHTML = s + `</svg>`;
+}
+
+function hbarChart(el, rows, { fmt = v => v, tip = r => `${r.label}: ${fmt(r.value)}`, max } = {}) {
+  if (!rows.length) { el.innerHTML = `<div class="empty">Nothing to show yet.</div>`; return; }
+  const W = 560, rowH = 26, LW = 120, VW = 64, H = rows.length * rowH;
+  max = max || Math.max(...rows.map(r => r.value), 1);
+  const span = W - LW - VW;
+  let s = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Bar chart">`;
+  rows.forEach((r, i) => {
+    const y = i * rowH, w = span * (r.value / max);
+    s += `<g data-tip="${esc(tip(r))}"><rect class="hit" x="0" y="${y}" width="${W}" height="${rowH}"/>`;
+    s += `<text x="${LW - 8}" y="${y + rowH / 2 + 4}" text-anchor="end">${esc(r.label)}</text>`;
+    s += `<rect x="${LW}" y="${y + 5}" width="${span}" height="${rowH - 10}" rx="4" fill="var(--surface-2)"/>`;
+    if (w > 0) s += `<path class="mark" d="${roundRightPath(LW, y + 5, Math.max(w, 2), rowH - 10, 4)}"/>`;
+    s += `<text x="${LW + span + 8}" y="${y + rowH / 2 + 4}" style="fill:var(--text)">${esc(r.display ?? fmt(r.value))}</text></g>`;
+  });
+  el.innerHTML = s + `</svg>`;
+}
+
+// tooltip
+document.addEventListener("mousemove", (e) => {
+  const g = e.target.closest?.("[data-tip]"), tip = $("#tip");
+  if (!g) { tip.style.opacity = 0; return; }
+  tip.textContent = g.getAttribute("data-tip"); tip.style.opacity = 1;
+  const x = Math.min(e.clientX + 12, window.innerWidth - tip.offsetWidth - 8);
+  tip.style.left = x + "px"; tip.style.top = (e.clientY - 36) + "px";
+});
+
+// ---------- render ----------
+function render() {
+  $("#who").textContent = state.user ? state.user : "";
+  document.querySelectorAll(".writeonly").forEach(el => el.style.display = state.canWrite ? "" : "none");
+  $("#approve-all").style.display = state.canWrite ? "" : "none";
+  fillFilters();
+  renderOverview(); renderJobs(); renderApps(); renderResponses(); renderLog();
+}
+
+function fillFilters() {
+  const sources = [...new Set([...state.data.jobs, ...state.data.applications].map(x => x.source).filter(Boolean))].sort();
+  for (const id of ["#jobs-source", "#apps-source"]) {
+    const sel = $(id), cur = sel.value;
+    sel.innerHTML = `<option value="">All platforms</option>` + sources.map(s => `<option ${s === cur ? "selected" : ""}>${esc(s)}</option>`).join("");
+  }
+  const as = $("#apps-status"), cur = as.value;
+  as.innerHTML = `<option value="">All statuses</option><option value="open" ${cur === "open" ? "selected" : ""}>Open (not closed)</option>` +
+    APP_STATUSES.map(([k, l]) => `<option value="${k}" ${k === cur ? "selected" : ""}>${l}</option>`).join("");
+  $("#resp-app").innerHTML = state.data.applications.slice().sort((a, b) => (a.company || "").localeCompare(b.company || ""))
+    .map(a => `<option value="${esc(a.id)}">${esc(a.company)} · ${esc(a.role)}</option>`).join("");
+}
+
+function renderOverview() {
+  const apps = state.data.applications, jobs = state.data.jobs, resp = state.data.responses;
+  const repliedIds = new Set(resp.map(r => r.application_id));
+  const replied = apps.filter(a => repliedIds.has(a.id) || !["applied", "no_response"].includes(a.status)).length;
+  const interviews = apps.filter(a => ["interview", "offer"].includes(a.status) || (a.history || []).some(h => h.status === "interview")).length;
+  const open = apps.filter(a => !CLOSED.has(a.status)).length;
+  const t = today(), wk = daysAgo(6);
+  const newJobs = jobs.filter(j => j.status === "new").length;
+  const kpi = (label, value, note) => `<div class="card kpi"><div class="label">${label}</div><div class="value">${value}</div><div class="note">${note}</div></div>`;
+  $("#kpis").innerHTML =
+    kpi("Applied", apps.length, `${apps.filter(a => a.applied_on >= wk).length} in the last 7 days`) +
+    kpi("Response rate", apps.length ? Math.round(100 * replied / apps.length) + "%" : "–", `${replied} of ${apps.length} got a reply`) +
+    kpi("Interviews", interviews, `${apps.filter(a => a.status === "offer").length} offer(s)`) +
+    kpi("Open applications", open, "not yet closed") +
+    kpi("Waiting for approval", newJobs, `${jobs.filter(j => j.found_on === t).length} jobs found today`);
+
+  dailyChart($("#chart-daily"), apps);
+
+  const byStatus = APP_STATUSES.map(([k, l]) => ({ label: l, value: apps.filter(a => a.status === k).length })).filter(r => r.value);
+  hbarChart($("#chart-status"), byStatus, { tip: r => `${r.label}: ${r.value} application${r.value === 1 ? "" : "s"}` });
+
+  const src = {};
+  apps.forEach(a => { const s = a.source || "Other"; src[s] = src[s] || { n: 0, r: 0 }; src[s].n++; if (repliedIds.has(a.id) || !["applied", "no_response"].includes(a.status)) src[s].r++; });
+  const srcRows = Object.entries(src).map(([k, v]) => ({ label: k, value: v.r / v.n, n: v.n, r: v.r, display: `${Math.round(100 * v.r / v.n)}% (${v.n})` }))
+    .sort((a, b) => b.n - a.n).slice(0, 8);
+  hbarChart($("#chart-source"), srcRows, { max: 1, tip: r => `${r.label}: ${r.r} replies from ${r.n} applications` });
+
+  const appById = Object.fromEntries(apps.map(a => [a.id, a]));
+  const items = [
+    ...resp.map(r => ({ date: r.date, html: `${badge(r.type, RESP_TONE[r.type])} <b>${esc(appById[r.application_id]?.company || "Unknown")}</b> · ${esc(r.summary)}` })),
+    ...state.data.daily_log.map(d => ({ date: d.date, html: `<b>Daily run</b> · ${esc(d.jobs_found)} found, ${esc(d.applied)} applied, ${esc(d.responses)} replies${d.summary ? " · " + esc(d.summary) : ""}` })),
+  ].sort((a, b) => (b.date || "").localeCompare(a.date || "")).slice(0, 8);
+  $("#feed").innerHTML = items.length ? items.map(i => `<li><span class="date">${fmtDate(i.date)}</span><span>${i.html}</span></li>`).join("") : `<li class="empty">No activity yet. The first daily run will appear here.</li>`;
+
+  const due = apps.filter(a => a.next_followup && a.next_followup <= t && !CLOSED.has(a.status)).sort((a, b) => a.next_followup.localeCompare(b.next_followup));
+  $("#followups").innerHTML = due.length ? `<table><thead><tr><th>Company</th><th>Role</th><th>Status</th><th>Applied</th><th>Follow up</th></tr></thead><tbody>` +
+    due.map(a => `<tr><td><b>${esc(a.company)}</b></td><td>${esc(a.role)}</td><td>${badge(STATUS_LABEL[a.status] || a.status, STATUS_TONE[a.status])}</td><td>${fmtDate(a.applied_on)}</td><td>${fmtDate(a.next_followup)}</td></tr>`).join("") + `</tbody></table>`
+    : `<div class="empty">Nothing due.</div>`;
+}
+
+function renderJobs() {
+  const q = $("#jobs-q").value.toLowerCase(), st = $("#jobs-status").value, src = $("#jobs-source").value, dt = $("#jobs-date").value;
+  const t = today(), wk = daysAgo(6);
+  const rows = state.data.jobs.filter(j =>
+    (!st || j.status === st) && (!src || j.source === src) &&
+    (!dt || (dt === "today" ? j.found_on === t : j.found_on >= wk)) &&
+    (!q || [j.company, j.role, (j.stack || []).join(" "), j.location].join(" ").toLowerCase().includes(q))
+  ).sort((a, b) => (b.found_on || "").localeCompare(a.found_on || "") || (b.match_score || 0) - (a.match_score || 0));
+  $("#jobs-count").textContent = `${rows.length} of ${state.data.jobs.length}`;
+  if (!rows.length) { $("#jobs-table").innerHTML = `<div class="empty">${state.data.jobs.length ? "No jobs match these filters." : "No jobs yet. The daily run will add them here for you to approve."}</div>`; return; }
+  $("#jobs-table").innerHTML = `<table><thead><tr><th>Found</th><th>Company · Role</th><th>Platform</th><th>Location</th><th class="num">Match</th><th>Status</th>${state.canWrite ? "<th></th>" : ""}</tr></thead><tbody>` +
+    rows.map(j => {
+      const url = safeUrl(j.url);
+      const acts = state.canWrite && j.status !== "applied" ? `<td><div class="actions">` +
+        (j.status !== "approved" ? `<button class="btn small" data-job="${esc(j.id)}" data-set="approved">Approve</button>` : "") +
+        (j.status !== "skipped" ? `<button class="btn small ghost" data-job="${esc(j.id)}" data-set="skipped">Skip</button>` : "") +
+        (j.status !== "new" ? `<button class="btn small ghost" data-job="${esc(j.id)}" data-set="new">Undo</button>` : "") +
+        `</div></td>` : (state.canWrite ? "<td></td>" : "");
+      return `<tr><td class="muted">${fmtDate(j.found_on)}</td>
+        <td><b>${url ? `<a href="${esc(url)}" target="_blank" rel="noopener">${esc(j.company)}</a>` : esc(j.company)}</b> · ${esc(j.role)}
+          ${(j.stack || []).length ? `<div class="muted">${esc(j.stack.join(", "))}</div>` : ""}
+          ${j.match_notes ? `<div class="muted">${esc(j.match_notes)}</div>` : ""}${j.salary ? `<div class="muted">${esc(j.salary)}</div>` : ""}</td>
+        <td>${esc(j.source)}</td><td>${esc(j.location)}</td>
+        <td class="num score">${j.match_score ?? ""}</td><td>${badge(j.status, JOB_TONE[j.status])}</td>${acts}</tr>`;
+    }).join("") + `</tbody></table>`;
+}
+
+function renderApps() {
+  const q = $("#apps-q").value.toLowerCase(), st = $("#apps-status").value, src = $("#apps-source").value;
+  const resp = state.data.responses;
+  const rows = state.data.applications.filter(a =>
+    (!st || (st === "open" ? !CLOSED.has(a.status) : a.status === st)) && (!src || a.source === src) &&
+    (!q || [a.company, a.role, a.notes].join(" ").toLowerCase().includes(q))
+  ).sort((a, b) => (b.last_update || b.applied_on || "").localeCompare(a.last_update || a.applied_on || ""));
+  $("#apps-count").textContent = `${rows.length} of ${state.data.applications.length}`;
+  if (!rows.length) { $("#apps-table").innerHTML = `<div class="empty">${state.data.applications.length ? "No applications match these filters." : "No applications yet."}</div>`; return; }
+  $("#apps-table").innerHTML = `<table><thead><tr><th>Company · Role</th><th>Platform</th><th>Applied</th><th>Status</th><th>Last update</th><th>Resume</th><th class="num">Replies</th></tr></thead><tbody>` +
+    rows.map(a => {
+      const url = safeUrl(a.url), res = safeUrl(a.resume_file), n = resp.filter(r => r.application_id === a.id).length;
+      const status = state.canWrite
+        ? `<select data-app="${esc(a.id)}" aria-label="Status">${APP_STATUSES.map(([k, l]) => `<option value="${k}" ${k === a.status ? "selected" : ""}>${l}</option>`).join("")}</select>`
+        : badge(STATUS_LABEL[a.status] || a.status, STATUS_TONE[a.status]);
+      const hist = (a.history || []).length ? `<details><summary class="muted">History (${a.history.length})</summary><ul class="history">${a.history.map(h => `<li>${fmtDate(h.date)} · ${esc(STATUS_LABEL[h.status] || h.status)}${h.note ? " · " + esc(h.note) : ""}</li>`).join("")}</ul></details>` : "";
+      return `<tr><td><b>${url ? `<a href="${esc(url)}" target="_blank" rel="noopener">${esc(a.company)}</a>` : esc(a.company)}</b> · ${esc(a.role)}
+          ${a.notes ? `<div class="muted">${esc(a.notes)}</div>` : ""}${hist}</td>
+        <td>${esc(a.source)}</td><td>${fmtDate(a.applied_on)}</td><td>${status}</td>
+        <td>${fmtDate(a.last_update)}${a.next_followup && !CLOSED.has(a.status) ? `<div class="muted">follow up ${fmtDate(a.next_followup)}</div>` : ""}</td>
+        <td>${res ? `<a href="${esc(res)}" target="_blank" rel="noopener">PDF</a>` : `<span class="muted">–</span>`}</td>
+        <td class="num">${n || ""}</td></tr>`;
+    }).join("") + `</tbody></table>`;
+}
+
+function renderResponses() {
+  const appById = Object.fromEntries(state.data.applications.map(a => [a.id, a]));
+  const rows = state.data.responses.slice().sort((a, b) => (b.date || "").localeCompare(a.date || ""));
+  $("#resp-table").innerHTML = rows.length ? `<table><thead><tr><th>Date</th><th>Company · Role</th><th>Type</th><th>Channel</th><th>From</th><th>Summary</th></tr></thead><tbody>` +
+    rows.map(r => { const a = appById[r.application_id] || {}; return `<tr><td class="muted">${fmtDate(r.date)}</td><td><b>${esc(a.company || "Unknown")}</b>${a.role ? " · " + esc(a.role) : ""}</td><td>${badge(r.type, RESP_TONE[r.type])}</td><td>${esc(r.channel)}</td><td class="muted">${esc(r.from)}</td><td>${esc(r.summary)}</td></tr>`; }).join("") + `</tbody></table>`
+    : `<div class="empty">No responses yet. Replies found in your email or on job sites will show up here.</div>`;
+}
+
+function renderLog() {
+  const rows = state.data.daily_log.slice().sort((a, b) => (b.date || "").localeCompare(a.date || ""));
+  $("#log-table").innerHTML = rows.length ? `<table><thead><tr><th>Date</th><th class="num">Found</th><th class="num">Applied</th><th class="num">Replies</th><th>Summary</th></tr></thead><tbody>` +
+    rows.map(d => `<tr><td>${fmtDate(d.date)}</td><td class="num">${esc(d.jobs_found)}</td><td class="num">${esc(d.applied)}</td><td class="num">${esc(d.responses)}</td><td>${esc(d.summary)}${d.problems ? `<div class="muted">⚠ ${esc(d.problems)}</div>` : ""}</td></tr>`).join("") + `</tbody></table>`
+    : `<div class="empty">No daily runs yet.</div>`;
+}
+
+// ---------- actions ----------
+document.addEventListener("click", async (e) => {
+  const b = e.target.closest("button[data-job]");
+  if (b) {
+    const j = state.data.jobs.find(x => x.id === b.dataset.job); if (!j) return;
+    const prev = j.status; j.status = b.dataset.set; renderJobs(); renderOverview();
+    if (!(await save("jobs", `Dashboard: ${b.dataset.set} ${j.company} – ${j.role}`))) { if (state.data.jobs.includes(j)) j.status = prev; render(); }
+  }
+});
+$("#approve-all").addEventListener("click", async () => {
+  const visible = [...document.querySelectorAll("#jobs-table button[data-set='approved']")].map(b => b.dataset.job);
+  const targets = state.data.jobs.filter(j => visible.includes(j.id) && j.status === "new");
+  if (!targets.length) { toast("No New jobs in this list."); return; }
+  targets.forEach(j => j.status = "approved"); renderJobs(); renderOverview();
+  if (!(await save("jobs", `Dashboard: approved ${targets.length} jobs`))) { targets.forEach(j => j.status = "new"); render(); }
+});
+document.addEventListener("change", async (e) => {
+  const s = e.target.closest("select[data-app]"); if (!s) return;
+  const a = state.data.applications.find(x => x.id === s.dataset.app); if (!a) return;
+  const prev = { status: a.status, last_update: a.last_update, history: (a.history || []).slice() };
+  a.status = s.value; a.last_update = today(); a.history = [...(a.history || []), { date: today(), status: s.value, note: "updated on dashboard" }];
+  renderOverview();
+  if (!(await save("applications", `Dashboard: ${a.company} → ${STATUS_LABEL[a.status]}`))) { Object.assign(a, prev); render(); } else renderApps();
+});
+$("#add-app").addEventListener("submit", async (e) => {
+  e.preventDefault(); const f = Object.fromEntries(new FormData(e.target));
+  const row = { id: uid("a", f.company, f.role), job_id: "", company: f.company.trim(), role: f.role.trim(), url: f.url.trim(), source: f.source.trim() || "Manual",
+    applied_on: f.applied_on, resume_file: "", status: "applied", last_update: f.applied_on, next_followup: "", notes: f.notes.trim(),
+    history: [{ date: f.applied_on, status: "applied", note: "added on dashboard" }] };
+  state.data.applications.push(row);
+  if (await save("applications", `Dashboard: add application ${row.company}`)) { e.target.reset(); render(); }
+  else { state.data.applications = state.data.applications.filter(x => x !== row); render(); }
+});
+$("#add-resp").addEventListener("submit", async (e) => {
+  e.preventDefault(); const f = Object.fromEntries(new FormData(e.target));
+  const a = state.data.applications.find(x => x.id === f.application_id);
+  const row = { id: uid("r", f.date, a?.company || "x"), application_id: f.application_id, date: f.date, channel: f.channel, from: f.from.trim(), type: f.type, summary: f.summary.trim() };
+  state.data.responses.push(row);
+  if (await save("responses", `Dashboard: log ${row.type} from ${a?.company || "unknown"}`)) { e.target.reset(); render(); }
+  else { state.data.responses = state.data.responses.filter(x => x !== row); render(); }
+});
+
+// filters
+["#jobs-q", "#jobs-status", "#jobs-source", "#jobs-date"].forEach(s => $(s).addEventListener("input", renderJobs));
+["#apps-q", "#apps-status", "#apps-source"].forEach(s => $(s).addEventListener("input", renderApps));
+
+// tabs
+function showTab(name) {
+  document.querySelectorAll("#tabs button").forEach(b => b.setAttribute("aria-selected", b.dataset.tab === name));
+  document.querySelectorAll("main section").forEach(s => s.classList.toggle("active", s.id === name));
+  pref("tab", name);
+}
+document.querySelectorAll("#tabs button").forEach(b => b.addEventListener("click", () => showTab(b.dataset.tab)));
+showTab(pref("tab") || "overview");
+
+// theme
+const savedTheme = pref("theme"); if (savedTheme) document.documentElement.dataset.theme = savedTheme;
+$("#theme").addEventListener("click", () => {
+  const dark = document.documentElement.dataset.theme ? document.documentElement.dataset.theme === "dark" : matchMedia("(prefers-color-scheme: dark)").matches;
+  const next = dark ? "light" : "dark"; document.documentElement.dataset.theme = next; pref("theme", next);
+});
+$("#refresh").addEventListener("click", load);
+document.querySelectorAll('input[type=date]').forEach(i => i.value = today());
+
+load();
+</script>
+</body>
+</html>
