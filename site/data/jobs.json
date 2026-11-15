@@ -1,1 +1,150 @@
-[]
+[
+  {
+    "id": "j-2026-11-15-apollo-senior-backend",
+    "found_on": "2026-11-15",
+    "company": "Apollo.io",
+    "role": "Senior Backend Engineer",
+    "url": "https://job-boards.greenhouse.io/apolloio/jobs/5183441004",
+    "source": "Built In / Greenhouse",
+    "location": "Remote (India)",
+    "remote_scope": "india",
+    "stack": [
+      "Ruby on Rails",
+      "Ruby",
+      "MongoDB",
+      "Redis",
+      "Elasticsearch",
+      "Docker",
+      "Kubernetes",
+      "Terraform"
+    ],
+    "salary": "",
+    "match_score": 90,
+    "match_notes": "Rails backend at a B2B sales-data product company, remote from India. Matches your Rails, Redis, MongoDB, Docker and Terraform. Gaps: Elasticsearch and Kubernetes are not on your resume. Seen as posted or reposted about 2-4 weeks ago, so check it is still open.",
+    "status": "new"
+  },
+  {
+    "id": "j-2026-11-15-gitlab-senior-backend-planning",
+    "found_on": "2026-11-15",
+    "company": "GitLab",
+    "role": "Senior Backend Engineer (Ruby on Rails), Plan: Planning Views",
+    "url": "https://job-boards.greenhouse.io/gitlab/jobs/8695815002",
+    "source": "Greenhouse",
+    "location": "Remote (India, Bangalore listed)",
+    "remote_scope": "india",
+    "stack": [
+      "Ruby on Rails",
+      "PostgreSQL",
+      "GraphQL"
+    ],
+    "salary": "",
+    "match_score": 86,
+    "match_notes": "Rails and PostgreSQL in a large product codebase; all-remote async company. Good match for your Rails and SQL. GitLab says some remote roles have location rules, so confirm India eligibility when you apply.",
+    "status": "new"
+  },
+  {
+    "id": "j-2026-11-15-gitlab-senior-backend-supply-chain",
+    "found_on": "2026-11-15",
+    "company": "GitLab",
+    "role": "Senior Backend Engineer, SSCS: Supply Chain",
+    "url": "https://job-boards.greenhouse.io/gitlab/jobs/8480580002",
+    "source": "Greenhouse",
+    "location": "Remote (India)",
+    "remote_scope": "india",
+    "stack": [
+      "Ruby on Rails",
+      "Go",
+      "GraphQL",
+      "PostgreSQL",
+      "Redis"
+    ],
+    "salary": "",
+    "match_score": 84,
+    "match_notes": "Rails is the team's main language, with some Go (willingness to ramp up is accepted). Founding role on a supply-chain security product. Gaps: Go and security-domain experience. Reposted about 8 hours before I saw it.",
+    "status": "new"
+  },
+  {
+    "id": "j-2026-11-15-lighthouz-senior-backend-india",
+    "found_on": "2026-11-15",
+    "company": "Lighthouz AI (YC S24)",
+    "role": "Senior Backend Engineer - India",
+    "url": "https://www.workatastartup.com/jobs/77258",
+    "source": "Work at a Startup (YC)",
+    "location": "Remote (India)",
+    "remote_scope": "india",
+    "stack": [
+      "Python",
+      "Node.js",
+      "Flask",
+      "PostgreSQL",
+      "MongoDB",
+      "AWS",
+      "Docker",
+      "Kubernetes"
+    ],
+    "salary": "₹4M INR listed",
+    "match_score": 78,
+    "match_notes": "Early-stage YC startup, backend focus, 3+ years. Matches your Python, AWS, Docker and SQL/NoSQL. SQS and Kafka are listed as nice to have, and you have both. The posting shows no date, so confirm it is still open.",
+    "status": "new"
+  },
+  {
+    "id": "j-2026-11-15-oscilar-senior-backend-java",
+    "found_on": "2026-11-15",
+    "company": "Oscilar",
+    "role": "Senior Backend Engineer - Java",
+    "url": "https://oscilar.com/careers/senior-staff-software-engineer-backend",
+    "source": "Oscilar careers / HN Who is hiring (Nov 2026)",
+    "location": "Remote (India)",
+    "remote_scope": "india",
+    "stack": [
+      "Java",
+      "AWS",
+      "Kafka",
+      "PostgreSQL",
+      "Redis",
+      "Docker",
+      "Kubernetes"
+    ],
+    "salary": "₹6.6M-9.7M per year (job-board estimate)",
+    "match_score": 72,
+    "match_notes": "Java, Kafka and AWS on a real-time fraud and risk product. You match on stack. Stretch: the India listing asks for 8+ years of Java (another version says 5+), and the pay is well above your target. Worth applying if you are fine with being a bit under the experience ask.",
+    "status": "new"
+  },
+  {
+    "id": "j-2026-11-15-weave-senior-backend-india-go",
+    "found_on": "2026-11-15",
+    "company": "Weave",
+    "role": "Senior Backend Engineer - India (Golang + Distributed Systems)",
+    "url": "https://www.remotefront.com/remote-jobs/weave-senior-backend-engineer-india-golang-distributed-systems-tiros",
+    "source": "RemoteFront (Weave careers)",
+    "location": "Remote (India, 100% remote)",
+    "remote_scope": "india",
+    "stack": [
+      "Go",
+      "gRPC",
+      "Kubernetes",
+      "GCP",
+      "SQL",
+      "Docker"
+    ],
+    "salary": "",
+    "match_score": 72,
+    "match_notes": "Healthcare software product. Wants 5+ years; Go preferred, but Java, Python or Ruby is accepted if you are willing to learn Go. Gap: no Go and no GCP on your resume. A second Weave backend opening (24 days old) exists; I kept one entry.",
+    "status": "new"
+  },
+  {
+    "id": "j-2026-11-15-dropbox-backend-product-engineer",
+    "found_on": "2026-11-15",
+    "company": "Dropbox",
+    "role": "Backend Product Software Engineer",
+    "url": "https://weworkremotely.com/remote-jobs/dropbox-backend-product-software-engineer",
+    "source": "We Work Remotely",
+    "location": "Remote (listed Anywhere in the World)",
+    "remote_scope": "worldwide",
+    "stack": [],
+    "salary": "",
+    "match_score": 70,
+    "match_notes": "Tagged Anywhere in the World on We Work Remotely, posted about 2 weeks ago. I could not open the posting itself, so the stack, experience ask and whether India is really allowed are unconfirmed. Check the page before spending time on it.",
+    "status": "new"
+  }
+]

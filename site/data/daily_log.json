@@ -1,1 +1,11 @@
-[]
+[
+  {
+    "id": "d-2026-11-15",
+    "date": "2026-11-15",
+    "jobs_found": 7,
+    "applied": 0,
+    "responses": 0,
+    "summary": "First search: 7 backend roles open to India or worldwide remote, mostly Rails and Java product companies. Nothing applied; waiting for your approval.",
+    "problems": "LinkedIn, Naukri, Instahyre, Cutshort and Wellfound need your login, so they were not searched (the job-bot on your Mac will cover them). RemoteOK and Remotive direct feeds are blocked from here, so I used We Work Remotely, Work at a Startup, Built In and company career pages. Left out: SupplyHouse (link points to a different job, US work-authorisation wording), SigNoz and Time Doctor (need Go or Node.js, below the 70 match line), staffing firms and consultancies."
+  }
+]

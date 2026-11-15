@@ -1,6 +1,6 @@
 # Pending tasks
 
-Status: **setup only.** No job search, listing or applying until Vikas says to start (`config/search.json` → `hunt_active: false`).
+Status: **hunt on (15 Nov 2026): searching and listing allowed; applying only for jobs Vikas approves on the dashboard.**
 Tick an item when its data arrives, and update the files it names.
 
 ## From Vikas: data

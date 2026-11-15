@@ -1,7 +1,7 @@
 {
   "_note": "Search settings for the daily run. TODO fields are waiting for Vikas (see PENDING.md).",
-  "hunt_active": false,
-  "_hunt_active_note": "Stays false until Vikas says to start. While false: no job search, no listing, no applying.",
+  "hunt_active": true,
+  "_hunt_active_note": "Switched on by Vikas on 2026-11-15 ('check job sites and add them to the dashboard'). Searching and listing allowed. Applying still needs approval (apply_mode approve-first).",
   "target_roles": [
     "Backend Engineer",
     "Senior Backend Engineer",
