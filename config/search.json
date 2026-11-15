@@ -2,7 +2,12 @@
   "_note": "Search settings for the daily run. TODO fields are waiting for Vikas (see PENDING.md).",
   "hunt_active": false,
   "_hunt_active_note": "Stays false until Vikas says to start. While false: no job search, no listing, no applying.",
-  "target_roles": "TODO: confirm (e.g. Backend Engineer / Senior Backend Engineer / Software Engineer - Backend)",
+  "target_roles": [
+    "Backend Engineer",
+    "Senior Backend Engineer",
+    "Software Engineer - Backend",
+    "Backend Developer"
+  ],
   "stack_from_resume": [
     "Java",
     "Spring Boot",
@@ -21,7 +26,7 @@
   "anchor_skill": "TODO: confirm (resume suggests Java / Spring Boot)",
   "years_experience": "5+",
   "location": "Bengaluru, India",
-  "remote_scope": "TODO: india-remote | global-remote | both",
+  "remote_scope": "global-remote",
   "min_ctc_lpa": null,
   "notice_period_days": 0,
   "company_type": "product",
@@ -31,9 +36,14 @@
     "outsourcing",
     "staffing agency"
   ],
-  "exclude_companies": [],
+  "exclude_companies": [
+    "Learnyst",
+    "LTIMindtree",
+    "LTI Mindtree",
+    "LTI"
+  ],
   "daily_target": 15,
-  "apply_mode": "TODO: approve-first | hybrid | auto",
+  "apply_mode": "approve-first",
   "linkedin_daily_cap": 18,
   "max_applications_per_company": 3,
   "posted_within_days": 7,
@@ -94,5 +104,8 @@
       "url": "https://himalayas.app/jobs",
       "needs_login": false
     }
-  ]
+  ],
+  "role_filter": "Backend engineer roles only; skip full-stack, frontend, mobile, data, devops, QA and management roles",
+  "current_ctc_lpa": 16.5,
+  "expected_ctc_lpa": "20+"
 }

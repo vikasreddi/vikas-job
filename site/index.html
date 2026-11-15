@@ -134,6 +134,7 @@
 
   <!-- OVERVIEW -->
   <section id="overview">
+    <div class="card" id="today-update" style="margin-bottom:14px"></div>
     <div class="grid kpis" id="kpis"></div>
     <div class="grid two">
       <div class="card"><h3>Applications per day</h3><div class="sub">Last 30 days</div><div class="chart" id="chart-daily"></div></div>
@@ -150,10 +151,13 @@
   <section id="jobs">
     <div class="card">
       <div class="toolbar">
-        <input type="search" id="jobs-q" placeholder="Search company, role, stack…">
+        <input type="search" id="jobs-q" placeholder="Search company or role…">
         <select id="jobs-status"><option value="">All statuses</option><option value="new" selected>New</option><option value="approved">Approved</option><option value="skipped">Skipped</option><option value="applied">Applied</option></select>
         <select id="jobs-source"><option value="">All platforms</option></select>
         <select id="jobs-date"><option value="">Any date</option><option value="today">Found today</option><option value="7">Last 7 days</option></select>
+        <input type="date" id="jobs-day" class="filterday" title="Show only jobs found on this day" aria-label="Found on day">
+        <button class="btn small ghost" id="jobs-day-clear" type="button">Clear day</button>
+        <select id="jobs-sort" aria-label="Sort"><option value="new">Newest first</option><option value="old">Oldest first</option><option value="score">Best match</option><option value="company">Company A–Z</option></select>
         <button class="btn small" id="approve-all" title="Approve every job in the current list that is still New">Approve all shown</button>
         <span class="count" id="jobs-count"></span>
       </div>
@@ -179,6 +183,10 @@
         <input type="search" id="apps-q" placeholder="Search company or role…">
         <select id="apps-status"><option value="">All statuses</option></select>
         <select id="apps-source"><option value="">All platforms</option></select>
+        <select id="apps-date"><option value="">Any date</option><option value="today">Applied today</option><option value="7">Last 7 days</option></select>
+        <input type="date" id="apps-day" class="filterday" title="Show only applications made on this day" aria-label="Applied on day">
+        <button class="btn small ghost" id="apps-day-clear" type="button">Clear day</button>
+        <select id="apps-sort" aria-label="Sort"><option value="updated">Recently updated</option><option value="new">Newest applied</option><option value="old">Oldest applied</option><option value="company">Company A–Z</option></select>
         <span class="count" id="apps-count"></span>
       </div>
       <div class="tablewrap" id="apps-table"></div>
@@ -376,6 +384,7 @@ function renderOverview() {
     kpi("Open applications", open, "not yet closed") +
     kpi("Waiting for approval", newJobs, `${jobs.filter(j => j.found_on === t).length} jobs found today`);
 
+  renderTodayUpdate();
   dailyChart($("#chart-daily"), apps);
 
   const byStatus = APP_STATUSES.map(([k, l]) => ({ label: l, value: apps.filter(a => a.status === k).length })).filter(r => r.value);
@@ -400,14 +409,39 @@ function renderOverview() {
     : `<div class="empty">Nothing due.</div>`;
 }
 
+function renderTodayUpdate() {
+  const el = $("#today-update"), d = state.data;
+  const dates = [...d.daily_log.map(x => x.date), ...d.jobs.map(x => x.found_on), ...d.applications.map(x => x.last_update), ...d.responses.map(x => x.date)].filter(Boolean).sort();
+  const last = dates[dates.length - 1];
+  if (!last) { el.innerHTML = `<h3>Today's update</h3><div class="empty">Nothing yet. After the first daily run, what was added that day shows here.</div>`; return; }
+  const log = d.daily_log.find(x => x.date === last);
+  const added = d.jobs.filter(j => j.found_on === last);
+  const applied = d.applications.filter(a => a.applied_on === last);
+  const changes = [];
+  d.applications.forEach(a => (a.history || []).forEach(h => { if (h.date === last && h.status !== "applied") changes.push({ a, h }); }));
+  const replies = d.responses.filter(r => r.date === last);
+  const apById = Object.fromEntries(d.applications.map(a => [a.id, a]));
+  const line = (n, label) => `<span class="badge ${n ? "info" : ""}"><b>${n}</b>&nbsp;${label}</span>`;
+  el.innerHTML = `<h3>${last === today() ? "Today's update" : "Latest update"} · ${fmtDate(last)}</h3>
+    <div class="sub">${log && log.summary ? esc(log.summary) : "What was added or changed on this day"}</div>
+    <div class="toolbar" style="margin:8px 0">${line(added.length, "jobs found")} ${line(applied.length, "applied")} ${line(changes.length, "status updates")} ${line(replies.length, "replies")}</div>
+    <ul class="feed">` +
+    changes.slice(0, 6).map(({ a, h }) => `<li><span class="date">${esc(STATUS_LABEL[h.status] || h.status)}</span><span><b>${esc(a.company)}</b> · ${esc(a.role)}${h.note ? " · " + esc(h.note) : ""}</span></li>`).join("") +
+    replies.slice(0, 4).map(r => `<li><span class="date">${esc(r.type)}</span><span><b>${esc(apById[r.application_id]?.company || "Unknown")}</b> · ${esc(r.summary)}</span></li>`).join("") +
+    `</ul>`;
+}
+
 function renderJobs() {
-  const q = $("#jobs-q").value.toLowerCase(), st = $("#jobs-status").value, src = $("#jobs-source").value, dt = $("#jobs-date").value;
+  const q = $("#jobs-q").value.toLowerCase().trim(), st = $("#jobs-status").value, src = $("#jobs-source").value, dt = $("#jobs-date").value, day = $("#jobs-day").value, sort = $("#jobs-sort").value;
   const t = today(), wk = daysAgo(6);
   const rows = state.data.jobs.filter(j =>
     (!st || j.status === st) && (!src || j.source === src) &&
-    (!dt || (dt === "today" ? j.found_on === t : j.found_on >= wk)) &&
-    (!q || [j.company, j.role, (j.stack || []).join(" "), j.location].join(" ").toLowerCase().includes(q))
-  ).sort((a, b) => (b.found_on || "").localeCompare(a.found_on || "") || (b.match_score || 0) - (a.match_score || 0));
+    (!dt || (dt === "today" ? j.found_on === t : j.found_on >= wk)) && (!day || j.found_on === day) &&
+    (!q || [j.company, j.role].join(" ").toLowerCase().includes(q))
+  ).sort((a, b) => sort === "old" ? (a.found_on || "").localeCompare(b.found_on || "") || (b.match_score || 0) - (a.match_score || 0)
+    : sort === "score" ? (b.match_score || 0) - (a.match_score || 0)
+    : sort === "company" ? (a.company || "").localeCompare(b.company || "")
+    : (b.found_on || "").localeCompare(a.found_on || "") || (b.match_score || 0) - (a.match_score || 0));
   $("#jobs-count").textContent = `${rows.length} of ${state.data.jobs.length}`;
   if (!rows.length) { $("#jobs-table").innerHTML = `<div class="empty">${state.data.jobs.length ? "No jobs match these filters." : "No jobs yet. The daily run will add them here for you to approve."}</div>`; return; }
   $("#jobs-table").innerHTML = `<table><thead><tr><th>Found</th><th>Company · Role</th><th>Platform</th><th>Location</th><th class="num">Match</th><th>Status</th>${state.canWrite ? "<th></th>" : ""}</tr></thead><tbody>` +
@@ -428,12 +462,17 @@ function renderJobs() {
 }
 
 function renderApps() {
-  const q = $("#apps-q").value.toLowerCase(), st = $("#apps-status").value, src = $("#apps-source").value;
+  const q = $("#apps-q").value.toLowerCase().trim(), st = $("#apps-status").value, src = $("#apps-source").value, dt = $("#apps-date").value, day = $("#apps-day").value, sort = $("#apps-sort").value;
+  const t = today(), wk = daysAgo(6);
   const resp = state.data.responses;
   const rows = state.data.applications.filter(a =>
     (!st || (st === "open" ? !CLOSED.has(a.status) : a.status === st)) && (!src || a.source === src) &&
-    (!q || [a.company, a.role, a.notes].join(" ").toLowerCase().includes(q))
-  ).sort((a, b) => (b.last_update || b.applied_on || "").localeCompare(a.last_update || a.applied_on || ""));
+    (!dt || (dt === "today" ? a.applied_on === t : a.applied_on >= wk)) && (!day || a.applied_on === day) &&
+    (!q || [a.company, a.role].join(" ").toLowerCase().includes(q))
+  ).sort((a, b) => sort === "old" ? (a.applied_on || "").localeCompare(b.applied_on || "")
+    : sort === "new" ? (b.applied_on || "").localeCompare(a.applied_on || "")
+    : sort === "company" ? (a.company || "").localeCompare(b.company || "")
+    : (b.last_update || b.applied_on || "").localeCompare(a.last_update || a.applied_on || ""));
   $("#apps-count").textContent = `${rows.length} of ${state.data.applications.length}`;
   if (!rows.length) { $("#apps-table").innerHTML = `<div class="empty">${state.data.applications.length ? "No applications match these filters." : "No applications yet."}</div>`; return; }
   $("#apps-table").innerHTML = `<table><thead><tr><th>Company · Role</th><th>Platform</th><th>Applied</th><th>Status</th><th>Last update</th><th>Resume</th><th class="num">Replies</th></tr></thead><tbody>` +
@@ -442,9 +481,18 @@ function renderApps() {
       const status = state.canWrite
         ? `<select data-app="${esc(a.id)}" aria-label="Status">${APP_STATUSES.map(([k, l]) => `<option value="${k}" ${k === a.status ? "selected" : ""}>${l}</option>`).join("")}</select>`
         : badge(STATUS_LABEL[a.status] || a.status, STATUS_TONE[a.status]);
-      const hist = (a.history || []).length ? `<details><summary class="muted">History (${a.history.length})</summary><ul class="history">${a.history.map(h => `<li>${fmtDate(h.date)} · ${esc(STATUS_LABEL[h.status] || h.status)}${h.note ? " · " + esc(h.note) : ""}</li>`).join("")}</ul></details>` : "";
+      const last = (a.history || []).slice(-1)[0];
+      const lastNote = last && last.note && !/^(updated|added) on dashboard$/.test(last.note) ? `<div class="muted">Latest: ${fmtDate(last.date)} · ${esc(last.note)}</div>` : "";
+      const upd = state.canWrite ? `<details class="add"><summary class="muted">Add update</summary>
+          <form class="inline" data-upd="${esc(a.id)}">
+            <label>Status<select name="status">${APP_STATUSES.map(([k, l]) => `<option value="${k}" ${k === a.status ? "selected" : ""}>${l}</option>`).join("")}</select></label>
+            <label>Date<input name="date" type="date" class="filterday" value="${today()}" required></label>
+            <label>What happened<input name="note" placeholder="e.g. HR called, screening on Friday 4pm" required></label>
+            <label>&nbsp;<button class="btn small" type="submit">Save</button></label>
+          </form></details>` : "";
+      const hist = (a.history || []).length ? `<details><summary class="muted">History (${a.history.length})</summary><ul class="history">${a.history.slice().reverse().map(h => `<li>${fmtDate(h.date)} · ${esc(STATUS_LABEL[h.status] || h.status)}${h.note ? " · " + esc(h.note) : ""}</li>`).join("")}</ul></details>` : "";
       return `<tr><td><b>${url ? `<a href="${esc(url)}" target="_blank" rel="noopener">${esc(a.company)}</a>` : esc(a.company)}</b> · ${esc(a.role)}
-          ${a.notes ? `<div class="muted">${esc(a.notes)}</div>` : ""}${hist}</td>
+          ${a.notes ? `<div class="muted">${esc(a.notes)}</div>` : ""}${lastNote}${hist}${upd}</td>
         <td>${esc(a.source)}</td><td>${fmtDate(a.applied_on)}</td><td>${status}</td>
         <td>${fmtDate(a.last_update)}${a.next_followup && !CLOSED.has(a.status) ? `<div class="muted">follow up ${fmtDate(a.next_followup)}</div>` : ""}</td>
         <td>${res ? `<a href="${esc(res)}" target="_blank" rel="noopener">PDF</a>` : `<span class="muted">–</span>`}</td>
@@ -491,6 +539,17 @@ document.addEventListener("change", async (e) => {
   renderOverview();
   if (!(await save("applications", `Dashboard: ${a.company} → ${STATUS_LABEL[a.status]}`))) { Object.assign(a, prev); render(); } else renderApps();
 });
+document.addEventListener("submit", async (e) => {
+  const f = e.target.closest("form[data-upd]"); if (!f) return;
+  e.preventDefault();
+  const a = state.data.applications.find(x => x.id === f.dataset.upd); if (!a) return;
+  const v = Object.fromEntries(new FormData(f));
+  const prev = { status: a.status, last_update: a.last_update, history: (a.history || []).slice() };
+  a.status = v.status; if (!a.last_update || v.date >= a.last_update) a.last_update = v.date;
+  a.history = [...(a.history || []), { date: v.date, status: v.status, note: v.note.trim() }];
+  renderOverview();
+  if (!(await save("applications", `Dashboard: ${a.company} update – ${v.note.trim().slice(0, 60)}`))) { Object.assign(a, prev); render(); } else renderApps();
+});
 $("#add-app").addEventListener("submit", async (e) => {
   e.preventDefault(); const f = Object.fromEntries(new FormData(e.target));
   const row = { id: uid("a", f.company, f.role), job_id: "", company: f.company.trim(), role: f.role.trim(), url: f.url.trim(), source: f.source.trim() || "Manual",
@@ -510,8 +569,10 @@ $("#add-resp").addEventListener("submit", async (e) => {
 });
 
 // filters
-["#jobs-q", "#jobs-status", "#jobs-source", "#jobs-date"].forEach(s => $(s).addEventListener("input", renderJobs));
-["#apps-q", "#apps-status", "#apps-source"].forEach(s => $(s).addEventListener("input", renderApps));
+["#jobs-q", "#jobs-status", "#jobs-source", "#jobs-date", "#jobs-day", "#jobs-sort"].forEach(s => $(s).addEventListener("input", renderJobs));
+["#apps-q", "#apps-status", "#apps-source", "#apps-date", "#apps-day", "#apps-sort"].forEach(s => $(s).addEventListener("input", renderApps));
+$("#jobs-day-clear").addEventListener("click", () => { $("#jobs-day").value = ""; renderJobs(); });
+$("#apps-day-clear").addEventListener("click", () => { $("#apps-day").value = ""; renderApps(); });
 
 // tabs
 function showTab(name) {
@@ -529,7 +590,7 @@ $("#theme").addEventListener("click", () => {
   const next = dark ? "light" : "dark"; document.documentElement.dataset.theme = next; pref("theme", next);
 });
 $("#refresh").addEventListener("click", load);
-document.querySelectorAll('input[type=date]').forEach(i => i.value = today());
+document.querySelectorAll('input[type=date]:not(.filterday)').forEach(i => i.value = today());
 
 load();
 </script>
