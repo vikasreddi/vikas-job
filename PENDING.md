@@ -17,7 +17,7 @@ Tick an item when its data arrives, and update the files it names.
 ## From Vikas: setup
 - [ ] Confirm the `vikas-job` repo is private
 - [x] Cloudflare Pages project `vikas-job` deployed, GitHub token + variables set (token expires 2027-02-13: renew)
-- [ ] Vikas: add Cloudflare secrets `APP_PASSWORD` (long password) and `SESSION_SECRET` (random 40+ chars), then redeploy. Site stays locked until both exist
+- [x] (done 2026-11-15; password is weak and was shared in chat, change it soon) Vikas: add Cloudflare secrets `APP_PASSWORD` (long password) and `SESSION_SECRET` (random 40+ chars), then redeploy. Site stays locked until both exist
 - [ ] Optional later: Cloudflare Access (needs a card on file even for Free) to replace the password login
 - [ ] Choose the address: free `vikas-job.pages.dev` or a custom domain
 - [ ] Turn on the Gmail connector for the job-hunt chat
