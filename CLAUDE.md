@@ -1,6 +1,6 @@
 # vikas-job: instructions for Claude
 
-This repo runs Vikas's job hunt: a daily search for remote jobs at product companies, a tailored resume for each job, application tracking, and a private dashboard (Cloudflare Pages + Access; see `docs-hosting.md`).
+This repo runs Vikas's job hunt: a daily search for remote jobs at product companies, a tailored resume for each job, application tracking, and a private dashboard (Cloudflare Pages + password login; see `docs-hosting.md`).
 
 ## Layout
 - `config/search.json`: target roles, stack, remote scope, exclusions, platforms, daily target, apply mode.
